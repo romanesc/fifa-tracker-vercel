@@ -12,8 +12,11 @@ export default function AddPlayerSection() {
     try {
       await addPlayer.mutateAsync(username)
       setUsername('') // Clear input on success
-    } catch (error) {
+    } catch (error: unknown) {
       // Error handling is managed by React Query
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
     }
   }
 
@@ -31,7 +34,7 @@ export default function AddPlayerSection() {
             required
           />
         </div>
-        {addPlayer.error && (
+        {addPlayer.error instanceof Error && (
           <p className="text-red-500 text-sm">{addPlayer.error.message}</p>
         )}
         <button
