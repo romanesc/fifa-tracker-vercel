@@ -83,10 +83,11 @@ export default function AddGameSection() {
       // Reset form on success
       setFormData(initialFormData)
 
-    } catch (e: any) {
-      console.error(e)
-    }
-  }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message)
+        }
+      }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
