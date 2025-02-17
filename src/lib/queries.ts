@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getPlayers, getRecentGames } from '@/utils/api'
 import { supabase } from './supabase'
-import { Player } from '@/types'
+import type { GameData } from '@/types/game'
 
 export function usePlayers() {
   return useQuery({
@@ -37,7 +37,7 @@ export function useAddGame() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async (gameData: any) => {
+    mutationFn: async (gameData: GameData) => {
       const { error } = await supabase
         .from('games')
         .insert([gameData])
