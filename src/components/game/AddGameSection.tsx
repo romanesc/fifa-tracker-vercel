@@ -1,7 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { useAddGame, usePlayers } from '@/lib/queries'
+import { usePlayers, useAddGame } from '@/lib/queries'
 import { calculatePointsExchange } from '@/utils/gameCalculations'
+import type { Player } from '@/types'
 
 interface FormData {
   player1Id: string
@@ -25,9 +26,11 @@ export default function AddGameSection() {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const { data: players = [] } = usePlayers()
   const addGame = useAddGame()
+  const [error, setError] = useState<string>('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError('')
 
     try {
       // Validate players are different
@@ -68,7 +71,7 @@ export default function AddGameSection() {
         )
       }
 
-      await addGame.mutateAsync({
+      const gameData = {
         player1_id: parseInt(formData.player1Id),
         player2_id: parseInt(formData.player2Id),
         player1_score: player1Score,
@@ -78,16 +81,19 @@ export default function AddGameSection() {
         player1_initial_points: player1.points,
         player2_initial_points: player2.points,
         points_exchanged: pointsExchanged
-      })
+      }
 
-      // Reset form on success
+      await addGame.mutateAsync(gameData)
       setFormData(initialFormData)
 
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message)
-        }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('An unexpected error occurred')
       }
+    }
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
@@ -175,9 +181,9 @@ export default function AddGameSection() {
           />
         </div>
 
-        {addGame.error && (
+        {error && (
           <div className="col-span-2">
-            <p className="text-red-500 text-sm">{addGame.error.message}</p>
+            <p className="text-red-500 text-sm">{error}</p>
           </div>
         )}
 
