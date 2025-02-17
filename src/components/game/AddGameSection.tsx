@@ -2,8 +2,7 @@
 import { useState } from 'react'
 import { usePlayers, useAddGame } from '@/lib/queries'
 import { calculatePointsExchange } from '@/utils/gameCalculations'
-// Remove the unused import or use it explicitly if needed
-// import type { Player } from '@/types'
+import type { Player } from '@/types'
 
 interface FormData {
   player1Id: string
