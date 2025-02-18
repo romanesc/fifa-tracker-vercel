@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { usePlayers, useAddGame } from '@/lib/queries'
 import { calculatePointsExchange } from '@/utils/gameCalculations'
+import type { Player } from '@/types/index'
 import type { GameData } from '@/types/games'
 
 interface FormData {
@@ -37,8 +38,8 @@ export default function AddGameSection() {
         throw new Error('A player cannot play against themselves')
       }
 
-      const player1 = players.find(p => p.id.toString() === formData.player1Id)
-      const player2 = players.find(p => p.id.toString() === formData.player2Id)
+      const player1 = players.find((p: Player) => p.id.toString() === formData.player1Id)
+      const player2 = players.find((p: Player) => p.id.toString() === formData.player2Id)
 
       if (!player1 || !player2) {
         throw new Error('Players not found')
@@ -98,37 +99,37 @@ export default function AddGameSection() {
     <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
       <h2 className="text-2xl font-bold mb-4">Record Game</h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-        <div>
-          <select
-            value={formData.player1Id}
-            onChange={(e) => setFormData({ ...formData, player1Id: e.target.value })}
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">Select Player 1</option>
-            {players.map(player => (
-              <option key={player.id} value={player.id}>
-                {player.username}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <select
+          value={formData.player1Id}
+          onChange={(e) => setFormData({ ...formData, player1Id: e.target.value })}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select Player 1</option>
+          {players.map((player: Player) => (
+            <option key={player.id} value={player.id}>
+              {player.username}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        <div>
-          <select
-            value={formData.player2Id}
-            onChange={(e) => setFormData({ ...formData, player2Id: e.target.value })}
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">Select Player 2</option>
-            {players.map(player => (
-              <option key={player.id} value={player.id}>
-                {player.username}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <select
+          value={formData.player2Id}
+          onChange={(e) => setFormData({ ...formData, player2Id: e.target.value })}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select Player 2</option>
+          {players.map((player: Player) => (
+            <option key={player.id} value={player.id}>
+              {player.username}
+            </option>
+          ))}
+        </select>
+      </div>
 
         <div>
           <input

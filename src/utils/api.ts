@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import { Player } from '@/types'
+import type { Player } from '@/types/index'
 
 export async function getPlayers() {
   const { data, error } = await supabase
@@ -12,12 +12,12 @@ export async function getPlayers() {
 }
 
 export async function getRecentGames() {
-    const { data, error } = await supabase
-      .from('games')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10)
-  
-    if (error) throw error
-    return data
-  }
+  const { data, error } = await supabase
+    .from('games')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  if (error) throw error
+  return data
+}

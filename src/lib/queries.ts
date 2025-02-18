@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getPlayers, getRecentGames } from '@/utils/api'
 import { supabase } from './supabase'
-import type { GameData } from '@/types/game'
+import type { GameData } from '@/types/index'
 
 export function usePlayers() {
   return useQuery({

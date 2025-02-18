@@ -6,17 +6,15 @@ export default function AddPlayerSection() {
   const [username, setUsername] = useState('')
   const addPlayer = useAddPlayer()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     
     try {
       await addPlayer.mutateAsync(username)
       setUsername('') // Clear input on success
-    } catch (error: unknown) {
+    } catch (error) {
       // Error handling is managed by React Query
-      if (error instanceof Error) {
-        console.error(error.message)
-      }
+      console.error('Failed to add player:', error)
     }
   }
 
