@@ -97,64 +97,74 @@ export default function AddGameSection() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm mb-6">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm mb-6">
       <h2 className="text-2xl font-bold mb-4 dark:text-white">Record Game</h2>
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-        <div>
-          <select
-            value={formData.player1Id}
-            onChange={(e) => setFormData({ ...formData, player1Id: e.target.value })}
-            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            required
-          >
-            <option value="">Select Player 1</option>
-            {players.map((player: Player) => (
-              <option key={player.id} value={player.id}>
-                {player.username}
-              </option>
-            ))}
-          </select>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Player Selects */}
+        <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 1</label>
+            <select
+              value={formData.player1Id}
+              onChange={(e) => setFormData({ ...formData, player1Id: e.target.value })}
+              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              required
+            >
+              <option value="">Select Player 1</option>
+              {players.map((player: Player) => (
+                <option key={player.id} value={player.id}>
+                  {player.username}
+                </option>
+              ))}
+            </select>
+          </div>
+  
+          <div>
+            <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 2</label>
+            <select
+              value={formData.player2Id}
+              onChange={(e) => setFormData({ ...formData, player2Id: e.target.value })}
+              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              required
+            >
+              <option value="">Select Player 2</option>
+              {players.map((player: Player) => (
+                <option key={player.id} value={player.id}>
+                  {player.username}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-
-      <div>
-        <select
-          value={formData.player2Id}
-          onChange={(e) => setFormData({ ...formData, player2Id: e.target.value })}
-          className="w-full p-2 border rounded"
-          required
-        >
-          <option value="">Select Player 2</option>
-          {players.map((player: Player) => (
-            <option key={player.id} value={player.id}>
-              {player.username}
-            </option>
-          ))}
-        </select>
-      </div>
-
+  
+        {/* Scores */}
         <div>
+          <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 1 Score</label>
           <input
             type="number"
             value={formData.player1Score}
             onChange={(e) => setFormData({ ...formData, player1Score: e.target.value })}
-            placeholder="Player 1 Score"
-            className="w-full p-2 border rounded"
+            placeholder="Score"
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-
+  
         <div>
+          <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 2 Score</label>
           <input
             type="number"
             value={formData.player2Score}
             onChange={(e) => setFormData({ ...formData, player2Score: e.target.value })}
-            placeholder="Player 2 Score"
-            className="w-full p-2 border rounded"
+            placeholder="Score"
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-
+  
+        {/* Team Stars */}
         <div>
+          <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 1 Team Stars</label>
           <input
             type="number"
             step="0.5"
@@ -162,13 +172,14 @@ export default function AddGameSection() {
             max="5"
             value={formData.player1Stars}
             onChange={(e) => setFormData({ ...formData, player1Stars: e.target.value })}
-            placeholder="Player 1 Team Stars"
+            placeholder="Team Stars"
             className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-
+  
         <div>
+          <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 2 Team Stars</label>
           <input
             type="number"
             step="0.5"
@@ -176,22 +187,22 @@ export default function AddGameSection() {
             max="5"
             value={formData.player2Stars}
             onChange={(e) => setFormData({ ...formData, player2Stars: e.target.value })}
-            placeholder="Player 2 Team Stars"
+            placeholder="Team Stars"
             className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-
+  
         {error && (
-          <div className="col-span-2">
+          <div className="col-span-1 sm:col-span-2">
             <p className="text-red-500 text-sm">{error}</p>
           </div>
         )}
-
+  
         <button
           type="submit"
           disabled={addGame.isPending}
-          className="col-span-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
+          className="col-span-1 sm:col-span-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
         >
           {addGame.isPending ? (
             <>
