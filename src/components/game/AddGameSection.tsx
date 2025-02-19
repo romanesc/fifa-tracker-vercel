@@ -4,6 +4,7 @@ import { usePlayers, useAddGame } from '@/lib/queries'
 import { calculatePointsExchange } from '@/utils/gameCalculations'
 import type { Player } from '@/types/index'
 import type { GameData } from '@/types/games'
+import { PulseLoader } from 'react-spinners'
 
 interface FormData {
   player1Id: string
@@ -96,24 +97,24 @@ export default function AddGameSection() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-      <h2 className="text-2xl font-bold mb-4">Record Game</h2>
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm mb-6">
+      <h2 className="text-2xl font-bold mb-4 dark:text-white">Record Game</h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-      <div>
-        <select
-          value={formData.player1Id}
-          onChange={(e) => setFormData({ ...formData, player1Id: e.target.value })}
-          className="w-full p-2 border rounded"
-          required
-        >
-          <option value="">Select Player 1</option>
-          {players.map((player: Player) => (
-            <option key={player.id} value={player.id}>
-              {player.username}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div>
+          <select
+            value={formData.player1Id}
+            onChange={(e) => setFormData({ ...formData, player1Id: e.target.value })}
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            required
+          >
+            <option value="">Select Player 1</option>
+            {players.map((player: Player) => (
+              <option key={player.id} value={player.id}>
+                {player.username}
+              </option>
+            ))}
+          </select>
+        </div>
 
       <div>
         <select
@@ -190,9 +191,16 @@ export default function AddGameSection() {
         <button
           type="submit"
           disabled={addGame.isPending}
-          className="col-span-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="col-span-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
         >
-          {addGame.isPending ? 'Recording...' : 'Record Game'}
+          {addGame.isPending ? (
+            <>
+              <PulseLoader color="white" size={8} className="mr-2" />
+              Recording...
+            </>
+          ) : (
+            'Record Game'
+          )}
         </button>
       </form>
     </div>

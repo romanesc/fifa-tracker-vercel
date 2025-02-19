@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useAddPlayer } from '@/lib/queries'
+import { PulseLoader } from 'react-spinners'
 
 export default function AddPlayerSection() {
   const [username, setUsername] = useState('')
@@ -19,8 +20,8 @@ export default function AddPlayerSection() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-      <h2 className="text-2xl font-bold mb-4">Add New Player</h2>
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm mb-6">
+      <h2 className="text-2xl font-bold mb-4 dark:text-white">Add New Player</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <input
@@ -28,7 +29,8 @@ export default function AddPlayerSection() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+            disabled={addPlayer.isPending}
             required
           />
         </div>
@@ -38,9 +40,16 @@ export default function AddPlayerSection() {
         <button
           type="submit"
           disabled={addPlayer.isPending}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
         >
-          {addPlayer.isPending ? 'Adding...' : 'Add Player'}
+          {addPlayer.isPending ? (
+            <>
+              <PulseLoader color="white" size={8} className="mr-2" />
+              Adding...
+            </>
+          ) : (
+            'Add Player'
+          )}
         </button>
       </form>
     </div>

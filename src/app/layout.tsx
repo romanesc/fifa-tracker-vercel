@@ -1,5 +1,7 @@
 import './globals.css'
 import Providers from '@/lib/providers'
+import { ThemeProvider } from '@/context/ThemeContext'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 export default function RootLayout({
   children,
@@ -9,9 +11,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <ThemeProvider>
+          <Providers>
+            {children}
+            <ThemeToggle />
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   )
