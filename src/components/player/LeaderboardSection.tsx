@@ -1,11 +1,20 @@
 'use client'
 import { usePlayers } from '@/lib/queries'
+import LoadingSpinner from '../ui/LoadingSpinner'
 
 export default function LeaderboardSection() {
   const { data: players, isLoading, error } = usePlayers()
 
-  if (isLoading) return <div>Loading leaderboard...</div>
-  if (error) return <div className="text-red-500">Error loading leaderboard</div>
+  if (isLoading) return <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+    <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+    <LoadingSpinner />
+  </div>
+  
+  if (error) return <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+    <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+    <div className="text-red-500 text-center">Error loading leaderboard</div>
+  </div>
+
   if (!players) return null
 
   return (
