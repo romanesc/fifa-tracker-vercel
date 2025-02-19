@@ -158,12 +158,12 @@ export default function AddGameSection() {
           <input
             type="number"
             step="0.5"
-            min="0"
+            min="0.5"
             max="5"
             value={formData.player1Stars}
             onChange={(e) => setFormData({ ...formData, player1Stars: e.target.value })}
             placeholder="Player 1 Team Stars"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
@@ -172,12 +172,12 @@ export default function AddGameSection() {
           <input
             type="number"
             step="0.5"
-            min="0"
+            min="0.5"
             max="5"
             value={formData.player2Stars}
             onChange={(e) => setFormData({ ...formData, player2Stars: e.target.value })}
             placeholder="Player 2 Team Stars"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
