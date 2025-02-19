@@ -1,6 +1,7 @@
 'use client'
 import { usePlayers } from '@/lib/queries'
 import LoadingSpinner from '../ui/LoadingSpinner'
+import Link from 'next/link'
 
 export default function LeaderboardSection() {
   const { data: players, isLoading, error } = usePlayers()
@@ -30,13 +31,20 @@ export default function LeaderboardSection() {
             </tr>
           </thead>
           <tbody>
-            {players.map((player, index) => (
-              <tr key={player.id} className="border-b dark:border-gray-700">
-                <td className="py-2 px-4 sm:px-2 dark:text-gray-300">{index + 1}</td>
-                <td className="py-2 px-4 sm:px-2 dark:text-gray-300">{player.username}</td>
-                <td className="py-2 px-4 sm:px-2 dark:text-gray-300">{player.points.toFixed(2)}</td>
-              </tr>
-            ))}
+          {players.map((player, index) => (
+            <tr key={player.id} className="border-b dark:border-gray-700">
+              <td className="py-2 px-4 sm:px-2 dark:text-gray-300">{index + 1}</td>
+              <td className="py-2 px-4 sm:px-2 dark:text-gray-300">
+                <Link 
+                  href={`/player/${player.id}`}
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  {player.username}
+                </Link>
+              </td>
+              <td className="py-2 px-4 sm:px-2 dark:text-gray-300">{player.points.toFixed(2)}</td>
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>
