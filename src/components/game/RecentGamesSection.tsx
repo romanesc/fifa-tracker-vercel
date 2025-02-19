@@ -43,20 +43,20 @@ export default function RecentGamesSection() {
           </thead>
           <tbody>
             {games.map((game) => (
-              <tr key={game.id} className="border-b">
-                <td className="py-2">
+              <tr key={game.id} className="border-b dark:border-gray-700">
+                <td className="py-2 dark:text-gray-300">
                   {new Date(game.created_at).toLocaleDateString()}
                 </td>
-                <td className="py-2">
+                <td className="py-2 dark:text-gray-300">
                   {getPlayerName(game.player1_id)} vs {getPlayerName(game.player2_id)}
                 </td>
-                <td className="py-2">
+                <td className="py-2 dark:text-gray-300">
                   {game.player1_score} - {game.player2_score}
                 </td>
-                <td className="py-2">
+                <td className="py-2 dark:text-gray-300">
                   {game.player1_team_stars}★ - {game.player2_team_stars}★
                 </td>
-                <td className="py-2">
+                <td className="py-2 dark:text-gray-300">
                   ±{game.points_exchanged.toFixed(2)}
                 </td>
               </tr>
