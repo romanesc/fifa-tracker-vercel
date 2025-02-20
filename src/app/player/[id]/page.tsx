@@ -90,7 +90,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
       ? (game.player1_score > game.player2_score ? game.points_exchanged : -game.points_exchanged)
       : (game.player2_score > game.player1_score ? game.points_exchanged : -game.points_exchanged)
     
-    const lastPoints = acc.length > 0 ? acc[acc.length - 1].points : 1200 // Starting points
+    const lastPoints = acc.length > 0 ? acc[acc.length - 1].points : 1200
     
     return [...acc, {
       date: format(new Date(game.created_at), 'MMM d'),
@@ -98,7 +98,13 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
     }]
   }, [])
 
-  return (
+// Add these calculations after pointProgressionData
+const minPoints = Math.min(...pointProgressionData.map(d => d.points))
+const maxPoints = Math.max(...pointProgressionData.map(d => d.points))
+const yAxisMin = Math.floor((minPoints - 50) / 100) * 100 // Round down to nearest 100
+const yAxisMax = Math.ceil((maxPoints + 50) / 100) * 100  // Round up to nearest 100
+
+return (
     <main className="max-w-4xl mx-auto p-4">
       <Link href="/">
         <span className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
@@ -168,7 +174,12 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value: number) => `${value}`}
-                />
+                domain={[yAxisMin, yAxisMax]}  // Now using the calculated values
+                ticks={Array.from(
+                  { length: (yAxisMax - yAxisMin) / 100 + 1 },
+                  (_, i) => yAxisMin + i * 100
+                )}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'white',
