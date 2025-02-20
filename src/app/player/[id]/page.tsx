@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Game, Player } from '@/types'
+import { Game, Player } from '@/types/index'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Link from 'next/link'
 
@@ -11,6 +11,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
   const [otherPlayers, setOtherPlayers] = useState<Player[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [players, setPlayers] = useState<Player[]>([])
 
   useEffect(() => {
     async function loadPlayerData() {
@@ -21,38 +22,35 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
           .select('*')
           .eq('id', params.id)
           .single()
-
+  
         if (playerError) throw playerError
         setPlayer(playerData)
-
+  
+        // Load all players for opponent names
+        const { data: allPlayers, error: allPlayersError } = await supabase
+          .from('players')
+          .select('*')
+  
+        if (allPlayersError) throw allPlayersError
+        setPlayers(allPlayers)
+  
         // Load games
         const { data: gamesData, error: gamesError } = await supabase
           .from('games')
           .select('*')
           .or(`player1_id.eq.${params.id},player2_id.eq.${params.id}`)
           .order('created_at', { ascending: false })
-
+  
         if (gamesError) throw gamesError
         setGames(gamesData)
-
-        // Load other players
-        const { data: playersData, error: playersError } = await supabase
-          .from('players')
-          .select('*')
-          .neq('id', params.id)
-          .order('points', { ascending: false })
-          .limit(10)
-
-        if (playersError) throw playersError
-        setOtherPlayers(playersData || [])
-
+  
       } catch (error: any) {
         setError(error.message)
       } finally {
         setLoading(false)
       }
     }
-
+  
     loadPlayerData()
   }, [params.id])
 
@@ -155,6 +153,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
             <thead>
               <tr className="border-b dark:border-gray-700">
                 <th className="py-2 text-left dark:text-gray-300">Date</th>
+                <th className="py-2 text-left dark:text-gray-300">Opponent</th>
                 <th className="py-2 text-left dark:text-gray-300">Result</th>
                 <th className="py-2 text-left dark:text-gray-300">Team Stars</th>
                 <th className="py-2 text-left dark:text-gray-300">Points</th>
@@ -166,6 +165,8 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                 const playerScore = isPlayer1 ? game.player1_score : game.player2_score
                 const opponentScore = isPlayer1 ? game.player2_score : game.player1_score
                 const playerStars = isPlayer1 ? game.player1_team_stars : game.player2_team_stars
+                const opponentStars = isPlayer1 ? game.player2_team_stars : game.player1_team_stars
+                const opponentId = isPlayer1 ? game.player2_id : game.player1_id
                 const won = isPlayer1 ? game.player1_score > game.player2_score : game.player2_score > game.player1_score
                 const pointsChange = won ? game.points_exchanged : -game.points_exchanged
 
@@ -175,10 +176,18 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                       {new Date(game.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-2 dark:text-gray-300">
+                      <Link 
+                        href={`/player/${opponentId}`}
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        {players.find(p => p.id === opponentId)?.username}
+                      </Link>
+                    </td>
+                    <td className="py-2 dark:text-gray-300">
                       {playerScore} - {opponentScore}
                     </td>
                     <td className="py-2 dark:text-gray-300">
-                      {playerStars}★
+                      {playerStars}★ - {opponentStars}★
                     </td>
                     <td className={`py-2 ${pointsChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
                       {pointsChange > 0 ? '+' : ''}{pointsChange.toFixed(2)}
