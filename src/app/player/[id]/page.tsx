@@ -4,7 +4,13 @@ import { supabase } from '@/lib/supabase'
 import { Game, Player } from '@/types/index'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Link from 'next/link'
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { format } from 'date-fns'
 
+interface PointData {
+  date: string;
+  points: number;
+}
 export default function PlayerPage({ params }: { params: { id: string } }) {
   const playerId = parseInt(params.id) // Use params.id instead of paramId
   const [player, setPlayer] = useState<Player | null>(null)
@@ -76,6 +82,22 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
     , 0) / (games.length || 1)
   }
 
+  const pointProgressionData = games
+  .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+  .reduce<PointData[]>((acc, game) => {
+    const isPlayer1 = game.player1_id === player.id
+    const pointChange = isPlayer1 
+      ? (game.player1_score > game.player2_score ? game.points_exchanged : -game.points_exchanged)
+      : (game.player2_score > game.player1_score ? game.points_exchanged : -game.points_exchanged)
+    
+    const lastPoints = acc.length > 0 ? acc[acc.length - 1].points : 1200 // Starting points
+    
+    return [...acc, {
+      date: format(new Date(game.created_at), 'MMM d'),
+      points: lastPoints + pointChange
+    }]
+  }, [])
+
   return (
     <main className="max-w-4xl mx-auto p-4">
       <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
@@ -122,6 +144,45 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
               Average Team Stars
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Points Progression Graph */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+        <h2 className="text-2xl font-bold mb-4 dark:text-white">Points Progression</h2>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={pointProgressionData}>
+              <XAxis 
+                dataKey="date" 
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value: number) => `${value}`}
+                />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px'
+                }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="points" 
+                stroke="#3B82F6" 
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
