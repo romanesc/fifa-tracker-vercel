@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Game, Player } from '@/types'
+import { Game, Player } from '@/types/index'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Link from 'next/link'
 import { format } from 'date-fns'

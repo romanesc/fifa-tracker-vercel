@@ -130,19 +130,20 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         <h2 className="text-2xl font-bold mb-4 dark:text-white">Compare with Player</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {players
-            .filter(p => p.id !== Number(playerId))
+            .filter(p => p.id !== player.id)
             .map(otherPlayer => (
-              <div
+              <Link
                 key={otherPlayer.id}
+                href={`/head-to-head/${player.id}/${otherPlayer.id}`}
                 className="p-3 border dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <span className="text-lg dark:text-white">
+                <span className="text-lg dark:text-white block">
                   {otherPlayer.username}
                 </span>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
                   {otherPlayer.points.toFixed(2)} points
-                </div>
-              </div>
+                </span>
+              </Link>
           ))}
         </div>
       </div>
