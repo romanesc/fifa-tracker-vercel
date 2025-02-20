@@ -30,28 +30,32 @@ export default function AddGameSection() {
   const addGame = useAddGame()
   const [error, setError] = useState<string>('')
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError('')
+// In AddGameSection.tsx
 
-    try {
-      if (formData.player1Id === formData.player2Id) {
-        throw new Error('A player cannot play against themselves')
-      }
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  setError('')
 
-      const player1 = players.find((p: Player) => p.id.toString() === formData.player1Id)
-      const player2 = players.find((p: Player) => p.id.toString() === formData.player2Id)
+  try {
+    if (formData.player1Id === formData.player2Id) {
+      throw new Error('A player cannot play against themselves')
+    }
 
-      if (!player1 || !player2) {
-        throw new Error('Players not found')
-      }
+    const player1 = players.find((p: Player) => p.id.toString() === formData.player1Id)
+    const player2 = players.find((p: Player) => p.id.toString() === formData.player2Id)
 
-      const player1Score = parseInt(formData.player1Score)
-      const player2Score = parseInt(formData.player2Score)
-      const player1Stars = parseFloat(formData.player1Stars)
-      const player2Stars = parseFloat(formData.player2Stars)
+    if (!player1 || !player2) {
+      throw new Error('Players not found')
+    }
 
-      let pointsExchanged = 0
+    const player1Score = parseInt(formData.player1Score)
+    const player2Score = parseInt(formData.player2Score)
+    const player1Stars = parseFloat(formData.player1Stars)
+    const player2Stars = parseFloat(formData.player2Stars)
+
+    let pointsExchanged = 0
+    // Only calculate points if the game is not tied
+    if (player1Score !== player2Score) {
       if (player1Score > player2Score) {
         pointsExchanged = calculatePointsExchange(
           player1.points,
@@ -61,7 +65,7 @@ export default function AddGameSection() {
           player1Score,
           player2Score
         )
-      } else if (player2Score > player1Score) {
+      } else {
         pointsExchanged = calculatePointsExchange(
           player2.points,
           player1.points,
@@ -71,30 +75,31 @@ export default function AddGameSection() {
           player1Score
         )
       }
+    }
 
-      const gameData: GameData = {
-        player1_id: parseInt(formData.player1Id),
-        player2_id: parseInt(formData.player2Id),
-        player1_score: player1Score,
-        player2_score: player2Score,
-        player1_team_stars: player1Stars,
-        player2_team_stars: player2Stars,
-        player1_initial_points: player1.points,
-        player2_initial_points: player2.points,
-        points_exchanged: pointsExchanged
-      }
+    const gameData: GameData = {
+      player1_id: parseInt(formData.player1Id),
+      player2_id: parseInt(formData.player2Id),
+      player1_score: player1Score,
+      player2_score: player2Score,
+      player1_team_stars: player1Stars,
+      player2_team_stars: player2Stars,
+      player1_initial_points: player1.points,
+      player2_initial_points: player2.points,
+      points_exchanged: pointsExchanged
+    }
 
-      await addGame.mutateAsync(gameData)
-      setFormData(initialFormData)
+    await addGame.mutateAsync(gameData)
+    setFormData(initialFormData)
 
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
-      } else {
-        setError('An unexpected error occurred')
-      }
+  } catch (error) {
+    if (error instanceof Error) {
+      setError(error.message)
+    } else {
+      setError('An unexpected error occurred')
     }
   }
+}
 
   return (
     <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm mb-6">
@@ -142,6 +147,7 @@ export default function AddGameSection() {
           <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 1 Score</label>
           <input
             type="number"
+            min="0"
             value={formData.player1Score}
             onChange={(e) => setFormData({ ...formData, player1Score: e.target.value })}
             placeholder="Score"
@@ -154,6 +160,7 @@ export default function AddGameSection() {
           <label className="block text-sm font-medium mb-1 dark:text-gray-300">Player 2 Score</label>
           <input
             type="number"
+            min="0"
             value={formData.player2Score}
             onChange={(e) => setFormData({ ...formData, player2Score: e.target.value })}
             placeholder="Score"

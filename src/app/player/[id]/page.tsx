@@ -1,5 +1,6 @@
-'use client'
-import { useEffect, useState } from 'react'
+'use client';
+
+import { useEffect, useState } from 'react'  // Remove 'use' from import
 import { supabase } from '@/lib/supabase'
 import { Game, Player } from '@/types/index'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -11,8 +12,11 @@ interface PointData {
   date: string;
   points: number;
 }
+
 export default function PlayerPage({ params }: { params: { id: string } }) {
-  const playerId = parseInt(params.id) // Use params.id instead of paramId
+  // Remove the use() call and directly use params
+  const playerId = parseInt(params.id);
+  
   const [player, setPlayer] = useState<Player | null>(null)
   const [players, setPlayers] = useState<Player[]>([])
   const [games, setGames] = useState<Game[]>([])
@@ -26,7 +30,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         const { data: playerData, error: playerError } = await supabase
           .from('players')
           .select('*')
-          .eq('id', params.id)
+          .eq('id', params.id)  // Use params.id directly
           .single()
   
         if (playerError) throw playerError
@@ -44,7 +48,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         const { data: gamesData, error: gamesError } = await supabase
           .from('games')
           .select('*')
-          .or(`player1_id.eq.${params.id},player2_id.eq.${params.id}`)
+          .or(`player1_id.eq.${params.id},player2_id.eq.${params.id}`)  // Use params.id directly
           .order('created_at', { ascending: false })
   
         if (gamesError) throw gamesError
@@ -58,7 +62,9 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
     }
   
     loadPlayerData()
-  }, [params.id])
+  }, [params.id])  // Update dependency array to use params.id
+
+  // Rest of the component remains the same...
 
   if (loading) return <LoadingSpinner />
   if (error) return <div className="text-red-500">{error}</div>

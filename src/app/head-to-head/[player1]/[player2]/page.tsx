@@ -1,5 +1,6 @@
-'use client'
-import { useEffect, useState } from 'react'
+'use client';
+
+import { useEffect, useState } from 'react'  // Remove 'use' from import
 import { supabase } from '@/lib/supabase'
 import { Game, Player } from '@/types/index'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -11,6 +12,7 @@ export default function HeadToHeadPage({
 }: { 
   params: { player1: string; player2: string } 
 }) {
+  // Remove the use() call and directly use params
   const [player1, setPlayer1] = useState<Player | null>(null)
   const [player2, setPlayer2] = useState<Player | null>(null)
   const [games, setGames] = useState<Game[]>([])
@@ -82,9 +84,13 @@ export default function HeadToHeadPage({
 
   return (
     <main className="max-w-4xl mx-auto p-4">
-      <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
-        ← Back to Home
+      <Link href="/">
+        <div className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
+          ← Back to Home
+        </div>
       </Link>
+
+      {/* Rest of the JSX remains the same... */}
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <h1 className="text-3xl font-bold mb-6 dark:text-white text-center">
