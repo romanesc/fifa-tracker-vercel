@@ -100,8 +100,10 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="max-w-4xl mx-auto p-4">
-      <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
-        ← Back to Home
+      <Link href="/">
+        <span className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
+          ← Back to Home
+        </span>
       </Link>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
@@ -203,12 +205,11 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                 .map(otherPlayer => (
                   <tr key={otherPlayer.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="py-2 dark:text-gray-300">
-                      <Link
-                        href={`/head-to-head/${player.id}/${otherPlayer.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
-                      >
+                    <Link href={`/head-to-head/${player.id}/${otherPlayer.id}`}>
+                      <span className="text-blue-600 dark:text-blue-400 hover:underline">
                         {otherPlayer.username}
-                      </Link>
+                      </span>
+                    </Link>
                     </td>
                     <td className="py-2 dark:text-gray-300">
                       {otherPlayer.points.toFixed(2)}
@@ -250,12 +251,11 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
                       {new Date(game.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-2 dark:text-gray-300">
-                      <Link 
-                        href={`/player/${opponentId}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
-                      >
+                    <Link href={`/player/${opponentId}`}>
+                      <span className="text-blue-600 dark:text-blue-400 hover:underline">
                         {players.find(p => p.id === opponentId)?.username}
-                      </Link>
+                      </span>
+                    </Link>
                     </td>
                     <td className="py-2 dark:text-gray-300">
                       {playerScore} - {opponentScore}
