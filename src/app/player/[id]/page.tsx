@@ -6,12 +6,12 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Link from 'next/link'
 
 export default function PlayerPage({ params }: { params: { id: string } }) {
+  const playerId = parseInt(params.id) // Use params.id instead of paramId
   const [player, setPlayer] = useState<Player | null>(null)
+  const [players, setPlayers] = useState<Player[]>([])
   const [games, setGames] = useState<Game[]>([])
-  const [otherPlayers, setOtherPlayers] = useState<Player[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [players, setPlayers] = useState<Player[]>([])
 
   useEffect(() => {
     async function loadPlayerData() {
@@ -125,23 +125,24 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      {/* New Compare with Player section */}
+      {/* Compare with Players section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <h2 className="text-2xl font-bold mb-4 dark:text-white">Compare with Player</h2>
-        <div className="space-y-4">
-          {otherPlayers.map(otherPlayer => (
-            <Link 
-              key={otherPlayer.id} 
-              href={`/head-to-head/${player.id}/${otherPlayer.id}`} 
-              className="block p-3 border dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              <div className="flex justify-between items-center">
-                <span className="text-lg dark:text-white">{otherPlayer.username}</span>
-                <span className="text-gray-600 dark:text-gray-400">
-                  {otherPlayer.points.toFixed(2)} pts
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {players
+            .filter(p => p.id !== Number(playerId))
+            .map(otherPlayer => (
+              <div
+                key={otherPlayer.id}
+                className="p-3 border dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span className="text-lg dark:text-white">
+                  {otherPlayer.username}
                 </span>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {otherPlayer.points.toFixed(2)} points
+                </div>
               </div>
-            </Link>
           ))}
         </div>
       </div>
