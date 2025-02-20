@@ -128,23 +128,34 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
       {/* Compare with Players section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <h2 className="text-2xl font-bold mb-4 dark:text-white">Compare with Player</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {players
-            .filter(p => p.id !== player.id)
-            .map(otherPlayer => (
-              <Link
-                key={otherPlayer.id}
-                href={`/head-to-head/${player.id}/${otherPlayer.id}`}
-                className="p-3 border dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <span className="text-lg dark:text-white block">
-                  {otherPlayer.username}
-                </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {otherPlayer.points.toFixed(2)} points
-                </span>
-              </Link>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b dark:border-gray-700">
+                <th className="py-2 text-left dark:text-gray-300">Player</th>
+                <th className="py-2 text-left dark:text-gray-300">Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players
+                .filter(p => p.id !== player.id)
+                .map(otherPlayer => (
+                  <tr key={otherPlayer.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="py-2 dark:text-gray-300">
+                      <Link
+                        href={`/head-to-head/${player.id}/${otherPlayer.id}`}
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        {otherPlayer.username}
+                      </Link>
+                    </td>
+                    <td className="py-2 dark:text-gray-300">
+                      {otherPlayer.points.toFixed(2)}
+                    </td>
+                  </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
